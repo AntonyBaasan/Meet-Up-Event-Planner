@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/antonybaasan/meet-up-event-planner#readme",
   "devDependencies": {
+    "babelify": "^7.3.0",
     "browserify": "^13.0.1",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",

@@ -36,11 +36,11 @@ var watchedBrowserify = watchify(browserifyChain);
 
 function bundle() {
     return watchedBrowserify
+        .transform("babelify")
         .bundle()
         .pipe(source(output_js_file_name))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(uglify())
         .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(output_dir));
 }
