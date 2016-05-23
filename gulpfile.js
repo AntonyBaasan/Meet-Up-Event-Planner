@@ -6,6 +6,10 @@ var source = require('vinyl-source-stream');
 var tsify = require("tsify");
 var watchify = require("watchify");
 var gutil = require("gulp-util");
+var uglify = require("gulp-uglify");
+var sourcemaps = require("gulp-sourcemaps");
+var buffer = require("vinyl-buffer");
+
 
 var output_dir = "dist";
 var output_js_file_name = "bundle.js";
@@ -18,21 +22,29 @@ gulp.task("copy-html", function () {
         .pipe(gulp.dest(output_dir));
 });
 
-var watchedBrowserify = watchify(browserify({
+
+var browserifyChain = browserify({
     basedir: '.',
     debug: true,
     entries: ['src/app.ts'],
     cache: {},
     packageCache: {}
 })
-    .plugin(tsify));
+    .plugin(tsify);
+
+var watchedBrowserify = watchify(browserifyChain);
 
 function bundle() {
     return watchedBrowserify
         .bundle()
         .pipe(source(output_js_file_name))
+        .pipe(buffer())
+        .pipe(sourcemaps.init({loadMaps: true}))
+        .pipe(uglify())
+        .pipe(sourcemaps.write("./"))
         .pipe(gulp.dest(output_dir));
 }
+
 
 gulp.task("default", ["copy-html"], bundle);
 watchedBrowserify.on("update", bundle);
