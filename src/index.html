@@ -1,11 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Title</title>
-    </head>
-    <body>
-        <p id="greeting">Loading...</p>
-        <script src="bundle.js"></script>
-    </body>
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="./../bower_components/traceur/traceur.min.js"></script>
+    <script src="./../bower_components/system.js/dist/system.js"></script>
+
+</head>
+<body>
+<p id="greeting">Loading...</p>
+<script>
+    System.import("app.js");
+</script>
+
+</body>
 </html>

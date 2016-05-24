@@ -10,11 +10,15 @@ var uglify = require("gulp-uglify");
 var sourcemaps = require("gulp-sourcemaps");
 var buffer = require("vinyl-buffer");
 
+var ts = require("gulp-typescript");
+var tsProject = ts.createProject("tsconfig.json");
 
-var output_dir = "dist";
-var output_js_file_name = "bundle.js";
 var paths = {
-    pages: ['src/*.html']
+    output_dir: "dist",
+    output_libs: "dist/lib",
+    pages: ['src/*.html'],
+    libs: ['bower_components/system.js'
+            ,''],
 };
 
 gulp.task("copy-html", function () {
@@ -22,55 +26,19 @@ gulp.task("copy-html", function () {
         .pipe(gulp.dest(output_dir));
 });
 
-
-var browserifyChain = browserify({
-    basedir: '.',
-    debug: true,
-    entries: ['src/app.ts'],
-    cache: {},
-    packageCache: {}
-})
-    .plugin(tsify);
-
-var watchedBrowserify = watchify(browserifyChain);
-
-function bundle() {
-    return watchedBrowserify
-        .transform("babelify")
-        .bundle()
-        .pipe(source(output_js_file_name))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(sourcemaps.write("./"))
-        .pipe(gulp.dest(output_dir));
-}
+gulp.task("copy-lib", function () {
+    return gulp.src(paths.libs)
+        .pipe(gulp.dest(output_libs));
+});
 
 
-gulp.task("default", ["copy-html"], bundle);
-watchedBrowserify.on("update", bundle);
-watchedBrowserify.on("log", gutil.log);
+gulp.task("default", ["copy-html", "copy-lib"], function () {
+    return tsProject.src()
+        .pipe(uglify())
+        .pipe(ts(tsProject))
+        .js.pipe(gulp.dest(paths.output_dir));
+});
 
-// gulp.task("default", function (cb) {
-//     runSequence(
-//         "compile",
-//         cb
-//     );
-// })
-//
-// gulp.task("rebuild", function (cb) {
-//     runSequence(
-//         "clean",
-//         "compile",
-//         cb
-//     );
-// })
-//
-// gulp.task("compile", function () {
-//     return tsProject.src()
-//         .pipe(ts(tsProject))
-//         .js.pipe(gulp.dest(output_dir));
-// })
-//
 gulp.task("clean", function () {
     return gulp.src(output_dir, {read: false})
         .pipe(clean());
