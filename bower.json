@@ -1,0 +1,20 @@
+{
+  "name": "meet-up-event-planner",
+  "description": "meetup event planner",
+  "main": "index.js",
+  "authors": [
+    "Antony Baasandorj"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/antonybaasan/meet-up-event-planner",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "traceur": "^0.0.108"
+  }
+}
