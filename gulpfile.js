@@ -14,7 +14,9 @@ var buffer = require("vinyl-buffer");
 var output_dir = "app";
 var output_js_file_name = "bundle.js";
 var paths = {
-    pages: ['src/*.html']
+    pages: ['src/*.html'],
+    config: ['src/config.js'],
+    jspm: ['src/jspm_packages/']
 };
 
 gulp.task("copy-html", function () {
@@ -22,6 +24,15 @@ gulp.task("copy-html", function () {
         .pipe(gulp.dest(output_dir));
 });
 
+gulp.task("copy-jspm", function () {
+    return gulp.src(paths.jspm)
+        .pipe(gulp.dest(output_dir));
+});
+
+gulp.task("copy-config", function () {
+    return gulp.src(paths.config)
+        .pipe(gulp.dest(output_dir));
+});
 
 var browserifyChain = browserify({
     basedir: '.',
@@ -47,7 +58,7 @@ function bundle() {
 }
 
 
-gulp.task("default", ["copy-html"], bundle);
+gulp.task("default", ["copy-html", "copy-config","copy-jspm"], bundle);
 watchedBrowserify.on("update", bundle);
 watchedBrowserify.on("log", gutil.log);
 

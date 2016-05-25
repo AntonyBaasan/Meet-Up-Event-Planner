@@ -5,3 +5,5 @@ node_modules
 
 dist
 app
+
+src/jspm_packages
