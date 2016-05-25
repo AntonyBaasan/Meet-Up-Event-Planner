@@ -11,7 +11,7 @@ var sourcemaps = require("gulp-sourcemaps");
 var buffer = require("vinyl-buffer");
 
 
-var output_dir = "dist";
+var output_dir = "app";
 var output_js_file_name = "bundle.js";
 var paths = {
     pages: ['src/*.html']
@@ -38,6 +38,7 @@ function bundle() {
     return watchedBrowserify
         .transform("babelify")
         .bundle()
+        .on('error', function (error) { console.error(error.toString()); })
         .pipe(source(output_js_file_name))
         .pipe(buffer())
         .pipe(sourcemaps.init({loadMaps: true}))
