@@ -7,9 +7,11 @@ import {EventForm} from "./comp/event-form"
 
 
 function showHello(divName: string, name: string) {
-    var f = new EventForm();
-    const elt = document.getElementById(divName);
-    elt.innerText = sayHello(name);
+    // var f = new EventForm();
+    // const elt = document.getElementById(divName);
+    // elt.innerText = sayHello(name);
+
+
 }
 
 showHello("greeting", "Antony");
