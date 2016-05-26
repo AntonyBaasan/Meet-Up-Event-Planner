@@ -5,8 +5,7 @@ System.config({
   babelOptions: {
     "stage": 0,
     "optional": [
-      "runtime",
-      "optimisation.modules.system"
+      "runtime"
     ]
   },
   paths: {
