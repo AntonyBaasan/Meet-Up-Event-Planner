@@ -6,7 +6,6 @@ export default class User{
     email: string;
     password: string;
     bio: string;
-    employer:string;
     job: string;
     birthday: string;
 }

@@ -10,21 +10,14 @@ import $ from 'jquery';
 // _.each([1, 2, 3], alert);
 
 class MainPage {
-    greeting: string;
-    constructor(message: string) {
-        this.greeting = message;
+    constructor() {
 
         var ev = new Event();
     }
 
-    render(){
-        console.log("Hello world...");
-        //document.getElementById("main-page").innerText = "Hello ...";
-
-        $('#nav-bar').load('/templates/nav-bar.html');
-        
-        //document.getElementById("nav-bar")
+    render(id:string, templateName:string){
+        $(id).load(templateName);
     }
 }
 
-new MainPage("world").render();
+new MainPage().render('#nav-bar', '/templates/nav-bar.html');

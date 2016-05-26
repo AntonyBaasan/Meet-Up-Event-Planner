@@ -2,28 +2,36 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login</title>
+    <title>User</title>
     <script src="jspm_packages/system.js"></script>
     <script src="config.js"></script>
+
 </head>
 <body>
+
 <div id="nav-bar"></div>
-<div>Login</div>
-<div id="login">
+<div>
+    User Info
+</div>
+
+<div>
+    <div>
+        <input type="text" placeholder="name"></input>
+    </div>
     <div>
         <input type="email" placeholder="email"></input>
     </div>
     <div>
-        <input type="password" placeholder="password"></input>
-    </div>
-
-    <div>
-        <button>Registration</button>
+        <textarea type="text" placeholder="bio"></textarea>
     </div>
     <div>
-        <button>Login</button>
+        <input type="text" placeholder="job"></input>
+    </div>
+    <div>
+        <input type="date" placeholder="birthday"></input>
     </div>
 </div>
+
 
 <script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
 <script>
