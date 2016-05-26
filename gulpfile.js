@@ -10,35 +10,44 @@ var uglify = require("gulp-uglify");
 var sourcemaps = require("gulp-sourcemaps");
 var buffer = require("vinyl-buffer");
 var surge = require('gulp-surge')
-
+var Server = require('karma').Server;
+var ts = require("gulp-typescript");
+var tsProject = ts.createProject("tsconfig.json");
 
 var domain_name = 'meetup-planner-antony.surge.sh';
-var output_dir = "app";
-var output_dir_jspm = "app/jspm_packages";
-var output_js_file_name = "bundle.js";
+
+var output_dir = {
+    base: "app",
+    jspm: "app/jspm_packages",
+    templates: "app/templates",
+};
+
 var paths = {
     pages: ['src/*.html'],
+    templates: ['src/templates/**'],
     config: ['src/config.js'],
     jspm: ['src/jspm_packages/**']
 };
 
 gulp.task("copy-html", function () {
     return gulp.src(paths.pages)
-        .pipe(gulp.dest(output_dir));
+        .pipe(gulp.dest(output_dir.base));
+});
+
+gulp.task("copy-templates", function () {
+    return gulp.src(paths.templates)
+        .pipe(gulp.dest(output_dir.templates));
 });
 
 gulp.task("copy-jspm", function () {
     return gulp.src(paths.jspm)
-        .pipe(gulp.dest(output_dir_jspm));
+        .pipe(gulp.dest(output_dir.jspm));
 });
 
 gulp.task("copy-config", function () {
     return gulp.src(paths.config)
-        .pipe(gulp.dest(output_dir));
+        .pipe(gulp.dest(output_dir.base));
 });
-
-var ts = require("gulp-typescript");
-var tsProject = ts.createProject("tsconfig.json");
 
 gulp.task("default", function (callback) {
     runSequence(
@@ -56,14 +65,14 @@ gulp.task("rebuild", function (callback) {
 
 gulp.task("build", ["compile", "copy-jspm"]);
 
-gulp.task("compile", ["copy-html", "copy-config"], function(){
+gulp.task("compile", ["copy-templates", "copy-html", "copy-config"], function () {
     return tsProject.src()
         .pipe(ts(tsProject))
-        .js.pipe(gulp.dest(output_dir));
+        .js.pipe(gulp.dest(output_dir.base));
 });
 
 gulp.task("clean", function () {
-    return gulp.src(output_dir, {read: false})
+    return gulp.src(output_dir.base, {read: false})
         .pipe(clean());
 })
 
@@ -75,10 +84,15 @@ gulp.task('deploy', ["build"], function () {
 })
 
 gulp.task('watch', function () {
-    // gulp.watch('files', ['task1', 'task2']);
     var watcher = gulp.watch('src/**', ['compile']);
     watcher.on('change', function (event) {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });
 });
 
+gulp.task('test', function (done) {
+    new Server({
+        configFile: __dirname + '/karma.conf.js',
+        singleRun: true
+    }, done).start();
+});

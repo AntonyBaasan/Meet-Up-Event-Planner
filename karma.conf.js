@@ -14,7 +14,8 @@ module.exports = function (config) {
 
         proxies: {
             '/test': '/base/test',
-            // '/app/jspm_packages': '/base/app/jspm_packages',
+            '/app': '/base/app',
+            // '/jspm_packages': '/base/app/jspm_packages',
             // '/base/jspm_packages': '/base/app/jspm_packages'
         },
 
@@ -28,8 +29,11 @@ module.exports = function (config) {
             // Edit this to your needs
             config: "app/config.js",
             packages: "",
-            serveFiles: ['app/**/*.js'],
             loadFiles: ['test/**/*.js'],
+            serveFiles: [
+                'app/**/*.js',
+                'base/app/domain/event.js',
+            ],
             paths: {
 
                 "github:*": "/base/app/jspm_packages/github/*",

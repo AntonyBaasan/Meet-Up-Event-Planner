@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Event List</title>
+    <script src="jspm_packages/system.js"></script>
+    <script src="config.js"></script>
+
+</head>
+<body>
+
+<div id="nav-bar"></div>
+<div>
+    Event list
+</div>
+
+<div>
+    Add Event Form
+    <div>
+        <input type="text" placeholder="name"></input>
+    </div>
+    <div>
+        <input type="email" placeholder="email"></input>
+    </div>
+
+    <div>
+        <input type="text" placeholder="event type"></input>
+    </div>
+    <div>
+        <input type="text" placeholder="host of the event"></input>
+    </div>
+    <div>
+        <input type="datetime" placeholder="start date"></input>
+    </div>
+    <div>
+        <input type="datetime" placeholder="end date"></input>
+    </div>
+    <div>
+        <input type="text" placeholder="guest list"></input>
+    </div>
+    <div>
+        <input type="text" placeholder="location"></input>
+    </div>
+    <div>
+        <textarea type="text" placeholder="message"></textarea>
+    </div>
+</div>
+
+
+<script src="https://www.gstatic.com/firebasejs/live/3.0/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDDpOexLquVYOeCTG2FtvLc5xWyoSkNVfY",
+        authDomain: "meetupplanner-4f380.firebaseapp.com",
+        databaseURL: "https://meetupplanner-4f380.firebaseio.com",
+        storageBucket: "",
+    };
+    firebase.initializeApp(config);
+
+    System.import("app.js");
+</script>
+</body>
+</html>

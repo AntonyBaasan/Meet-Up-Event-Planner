@@ -2,20 +2,29 @@
  * Created by Antony on 2016-05-22.
  */
 
-import {sayHello} from "./comp/greet"
 import {EventForm} from "./comp/event-form"
-import {Event} from "./domain/event"
+import Event from "./domain/event"
 import {_} from "underscore"
+import $ from 'jquery';
 
+// _.each([1, 2, 3], alert);
 
-function showHello(divName: string, name: string) {
-    var event = new Event();
-    var eventForm = new EventForm();
+class MainPage {
+    greeting: string;
+    constructor(message: string) {
+        this.greeting = message;
 
-    // _.each([1, 2, 3], alert);
+        var ev = new Event();
+    }
 
-    console.log("Hello world...")
-    
+    render(){
+        console.log("Hello world...");
+        //document.getElementById("main-page").innerText = "Hello ...";
+
+        $('#nav-bar').load('/templates/nav-bar.html');
+        
+        //document.getElementById("nav-bar")
+    }
 }
 
-showHello("greeting", "Antony");
+new MainPage("world").render();

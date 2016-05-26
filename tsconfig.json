@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "es2015",
     "noImplicitAny": true,
     "removeComments": true,
     "target": "es2015",
     "sourceMap": true
   },
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "jspm_packages",
+    "src/jspm_packages"
   ]
 }
