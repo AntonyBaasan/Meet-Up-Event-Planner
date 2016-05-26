@@ -23,21 +23,21 @@ var output_dir = {
 };
 
 var paths = {
-    pages: ['src/*.html'],
-    templates: ['src/templates/**'],
+    pages: ['src/**/*.html', 'src/**/*.js'],
+    //templates: ['src/templates/**'],
     config: ['src/config.js'],
     jspm: ['src/jspm_packages/**']
 };
 
-gulp.task("copy-html", function () {
+gulp.task("copy-html-js", function () {
     return gulp.src(paths.pages)
         .pipe(gulp.dest(output_dir.base));
 });
 
-gulp.task("copy-templates", function () {
-    return gulp.src(paths.templates)
-        .pipe(gulp.dest(output_dir.templates));
-});
+// gulp.task("copy-templates", function () {
+//     return gulp.src(paths.templates)
+//         .pipe(gulp.dest(output_dir.templates));
+// });
 
 gulp.task("copy-jspm", function () {
     return gulp.src(paths.jspm)
@@ -63,12 +63,13 @@ gulp.task("rebuild", function (callback) {
         callback);
 });
 
-gulp.task("build", ["compile", "copy-jspm"]);
+gulp.task("build", ["compile", "copy-jspm", "copy-config"]);
 
-gulp.task("compile", ["copy-templates", "copy-html", "copy-config"], function () {
+gulp.task("compile", [ "copy-html-js"], function () {
     return tsProject.src()
         .pipe(ts(tsProject))
-        .js.pipe(gulp.dest(output_dir.base));
+        .js
+        .pipe(gulp.dest("src"));
 });
 
 gulp.task("clean", function () {
@@ -84,7 +85,7 @@ gulp.task('deploy', ["build"], function () {
 })
 
 gulp.task('watch', function () {
-    var watcher = gulp.watch('src/**', ['compile']);
+    var watcher = gulp.watch(['src/**/*.ts','src/**/*.html'], ['compile']);
     watcher.on('change', function (event) {
         console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
     });

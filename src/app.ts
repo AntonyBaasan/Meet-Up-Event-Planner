@@ -11,11 +11,11 @@ import $ from 'jquery';
 
 class MainPage {
     constructor() {
-
         var ev = new Event();
     }
 
     render(id:string, templateName:string){
+        console.log("aaaaas");
         $(id).load(templateName);
     }
 }
