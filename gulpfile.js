@@ -68,7 +68,7 @@ gulp.task("clean", function () {
         .pipe(clean());
 })
 
-gulp.task('deploy', ["default"], function () {
+gulp.task('deploy', ["build"], function () {
     return surge({
         project: './app',         // Path to your static build directory
         domain: domain_name       // Your domain or Surge subdomain
