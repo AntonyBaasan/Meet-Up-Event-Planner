@@ -54,8 +54,7 @@ gulp.task("rebuild", function (callback) {
         callback);
 });
 
-gulp.task("build", ["compile", "copy-jspm"], function () {
-});
+gulp.task("build", ["compile", "copy-jspm"]);
 
 gulp.task("compile", ["copy-html", "copy-config"], function(){
     return tsProject.src()
