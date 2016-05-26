@@ -4,4 +4,8 @@
 
 export class Event{
     name: string;
+
+    constructor(){
+        console.log("New Event Created");
+    }
 }

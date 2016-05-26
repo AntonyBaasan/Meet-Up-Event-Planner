@@ -5,6 +5,6 @@ import {Event} from "../domain/event"
 
 export class EventForm{
     constructor(){
-        var event = new Event();
+        console.log("New Event Form created")
     }
 }

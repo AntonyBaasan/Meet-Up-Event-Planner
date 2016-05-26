@@ -11,6 +11,7 @@ var sourcemaps = require("gulp-sourcemaps");
 var buffer = require("vinyl-buffer");
 var surge = require('gulp-surge')
 
+
 var domain_name = 'meetup-planner-antony.surge.sh';
 var output_dir = "app";
 var output_dir_jspm = "app/jspm_packages";
@@ -36,44 +37,31 @@ gulp.task("copy-config", function () {
         .pipe(gulp.dest(output_dir));
 });
 
-// var browserifyChain = browserify({
-//     basedir: '.',
-//     debug: true,
-//     entries: ['src/app.ts'],
-//     cache: {},
-//     packageCache: {}
-// })
-//     .plugin(tsify);
-//
-// var watchedBrowserify = watchify(browserifyChain);
-//
-// function bundle() {
-//     return watchedBrowserify
-//         .transform("babelify")
-//         .bundle()
-//         .on('error', function (error) { console.error(error.toString()); })
-//         .pipe(source(output_js_file_name))
-//         .pipe(buffer())
-//         .pipe(sourcemaps.init({loadMaps: true}))
-//         .pipe(sourcemaps.write("./"))
-//         .pipe(gulp.dest(output_dir));
-// }
-//
-//
-// gulp.task("default", ["copy-html", "copy-config","copy-jspm"], bundle);
-// watchedBrowserify.on("update", bundle);
-// watchedBrowserify.on("log", gutil.log);
-
-
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
 
-gulp.task("default", ["copy-html", "copy-config","copy-jspm"], function () {
+gulp.task("default", function (callback) {
+    runSequence(
+        'build',
+        'watch',
+        callback);
+});
+
+gulp.task("rebuild", function (callback) {
+    runSequence('clean',
+        'build',
+        'watch',
+        callback);
+});
+
+gulp.task("build", ["compile", "copy-jspm"], function () {
+});
+
+gulp.task("compile", ["copy-html", "copy-config"], function(){
     return tsProject.src()
         .pipe(ts(tsProject))
         .js.pipe(gulp.dest(output_dir));
 });
-
 
 gulp.task("clean", function () {
     return gulp.src(output_dir, {read: false})
@@ -86,3 +74,12 @@ gulp.task('deploy', ["default"], function () {
         domain: domain_name       // Your domain or Surge subdomain
     })
 })
+
+gulp.task('watch', function () {
+    // gulp.watch('files', ['task1', 'task2']);
+    var watcher = gulp.watch('src/**', ['compile']);
+    watcher.on('change', function (event) {
+        console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+    });
+});
+

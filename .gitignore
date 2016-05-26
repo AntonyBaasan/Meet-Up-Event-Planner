@@ -2,8 +2,10 @@
 .idea
 
 node_modules
+bower_components
+jspm_packages
+src/jspm_packages
 
 dist
 app
 
-src/jspm_packages
