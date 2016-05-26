@@ -1,11 +1,17 @@
-<!DOCTYPE html>
-<html lang="en">
+<html>
     <head>
         <meta charset="UTF-8">
         <title>Title</title>
+        <script src="jspm_packages/system.js"></script>
+        <script src="config.js"></script>
     </head>
     <body>
-        <p id="greeting">Loading...</p>
-        <script src="bundle.js"></script>
+        <!--<p id="greeting">Loading...</p>-->
+        <!--<script src="bundle.js"></script>-->
+
+        <script>
+            System.import("app.js");
+        </script>
+
     </body>
 </html>

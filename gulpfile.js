@@ -9,12 +9,17 @@ var gutil = require("gulp-util");
 var uglify = require("gulp-uglify");
 var sourcemaps = require("gulp-sourcemaps");
 var buffer = require("vinyl-buffer");
+var surge = require('gulp-surge')
 
 
-var output_dir = "dist";
+var domain_name = 'meetup-planner-antony.surge.sh';
+var output_dir = "app";
+var output_dir_jspm = "app/jspm_packages";
 var output_js_file_name = "bundle.js";
 var paths = {
-    pages: ['src/*.html']
+    pages: ['src/*.html'],
+    config: ['src/config.js'],
+    jspm: ['src/jspm_packages/**']
 };
 
 gulp.task("copy-html", function () {
@@ -22,56 +27,59 @@ gulp.task("copy-html", function () {
         .pipe(gulp.dest(output_dir));
 });
 
+gulp.task("copy-jspm", function () {
+    return gulp.src(paths.jspm)
+        .pipe(gulp.dest(output_dir_jspm));
+});
 
-var browserifyChain = browserify({
-    basedir: '.',
-    debug: true,
-    entries: ['src/app.ts'],
-    cache: {},
-    packageCache: {}
-})
-    .plugin(tsify);
-
-var watchedBrowserify = watchify(browserifyChain);
-
-function bundle() {
-    return watchedBrowserify
-        .transform("babelify")
-        .bundle()
-        .pipe(source(output_js_file_name))
-        .pipe(buffer())
-        .pipe(sourcemaps.init({loadMaps: true}))
-        .pipe(sourcemaps.write("./"))
+gulp.task("copy-config", function () {
+    return gulp.src(paths.config)
         .pipe(gulp.dest(output_dir));
-}
+});
 
+var ts = require("gulp-typescript");
+var tsProject = ts.createProject("tsconfig.json");
 
-gulp.task("default", ["copy-html"], bundle);
-watchedBrowserify.on("update", bundle);
-watchedBrowserify.on("log", gutil.log);
+gulp.task("default", function (callback) {
+    runSequence(
+        'build',
+        'watch',
+        callback);
+});
 
-// gulp.task("default", function (cb) {
-//     runSequence(
-//         "compile",
-//         cb
-//     );
-// })
-//
-// gulp.task("rebuild", function (cb) {
-//     runSequence(
-//         "clean",
-//         "compile",
-//         cb
-//     );
-// })
-//
-// gulp.task("compile", function () {
-//     return tsProject.src()
-//         .pipe(ts(tsProject))
-//         .js.pipe(gulp.dest(output_dir));
-// })
-//
+gulp.task("rebuild", function (callback) {
+    runSequence('clean',
+        'build',
+        'watch',
+        callback);
+});
+
+gulp.task("build", ["compile", "copy-jspm"], function () {
+});
+
+gulp.task("compile", ["copy-html", "copy-config"], function(){
+    return tsProject.src()
+        .pipe(ts(tsProject))
+        .js.pipe(gulp.dest(output_dir));
+});
+
 gulp.task("clean", function () {
     return gulp.src(output_dir, {read: false})
         .pipe(clean());
 })
+
+gulp.task('deploy', ["build"], function () {
+    return surge({
+        project: './app',         // Path to your static build directory
+        domain: domain_name       // Your domain or Surge subdomain
+    })
+})
+
+gulp.task('watch', function () {
+    // gulp.watch('files', ['task1', 'task2']);
+    var watcher = gulp.watch('src/**', ['compile']);
+    watcher.on('change', function (event) {
+        console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
+    });
+});
+
