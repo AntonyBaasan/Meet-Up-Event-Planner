@@ -13,6 +13,8 @@ var surge = require('gulp-surge')
 var Server = require('karma').Server;
 var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
+//var run = require("gulp-run");
+var exec = require('child_process').exec;
 
 var domain_name = 'meetup-planner-antony.surge.sh';
 
@@ -23,7 +25,7 @@ var output_dir = {
 };
 
 var paths = {
-    pages: ['src/**/*.html', 'src/**/*.js'],
+    pages: ['src/**/*.html', 'src/**/*.js', 'src/**/*.js.map'],
     //templates: ['src/templates/**'],
     config: ['src/config.js'],
     jspm: ['src/jspm_packages/**']
@@ -33,11 +35,6 @@ gulp.task("copy-html-js", function () {
     return gulp.src(paths.pages)
         .pipe(gulp.dest(output_dir.base));
 });
-
-// gulp.task("copy-templates", function () {
-//     return gulp.src(paths.templates)
-//         .pipe(gulp.dest(output_dir.templates));
-// });
 
 gulp.task("copy-jspm", function () {
     return gulp.src(paths.jspm)
@@ -63,9 +60,35 @@ gulp.task("rebuild", function (callback) {
         callback);
 });
 
-gulp.task("build", ["compile", "copy-jspm", "copy-config"]);
+gulp.task("build", ["copy-jspm", "copy-config"], function(callback){
+    runSequence(
+        "compile",
+        "copy-html-js",
+        callback);
+});
 
-gulp.task("compile", [ "copy-html-js"], function () {
+gulp.task("build.prod", ["copy-jspm", "copy-config"], function(callback){
+    runSequence(
+        "compile",
+        "bundle",
+        "copy-html-js",
+        callback);
+});
+
+// gulp.task("bundle", function () {
+//     run('jspm bundle ./src/app.js ./src/app.bundle.js --inject --minify').exec();
+// });
+
+gulp.task("bundle",function (cb) {
+    exec('jspm bundle ./src/app.js ./src/app.bundle.js --inject --minify', function (err, stdout, stderr) {
+        // console.log(err);
+        // console.log(stdout);
+        // console.log(stderr);
+        cb(err);
+    });
+})
+
+gulp.task("compile", function () {
     return tsProject.src()
         .pipe(ts(tsProject))
         .js
