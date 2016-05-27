@@ -9,7 +9,7 @@ before_script:
   - npm install -g jspm
   - jspm install
   - npm install -g gulp
-  - npm build.prod
+  - gulp build.prod
 
 script: gulp test
 
