@@ -15,6 +15,7 @@ var ts = require("gulp-typescript");
 var tsProject = ts.createProject("tsconfig.json");
 //var run = require("gulp-run");
 var exec = require('child_process').exec;
+var gls = require('gulp-live-server');
 
 var domain_name = 'meetup-planner-antony.surge.sh';
 
@@ -26,7 +27,6 @@ var output_dir = {
 
 var paths = {
     pages: ['src/**/*.html', 'src/**/*.js', 'src/**/*.js.map'],
-    //templates: ['src/templates/**'],
     config: ['src/config.js'],
     jspm: ['src/jspm_packages/**']
 };
@@ -46,56 +46,69 @@ gulp.task("copy-config", function () {
         .pipe(gulp.dest(output_dir.base));
 });
 
-gulp.task("default", function (callback) {
-    runSequence(
-        'build',
-        'watch',
-        callback);
-});
+gulp.task("default", ['build']);
 
 gulp.task("rebuild", function (callback) {
     runSequence('clean',
         'build',
-        'watch',
         callback);
 });
 
-gulp.task("build", ["copy-jspm", "copy-config"], function(callback){
+gulp.task("build", ["copy-jspm"], function(callback){
     runSequence(
         "compile",
+        callback);
+});
+
+gulp.task("build.prod", ["copy-jspm"], function(callback){
+    runSequence(
+        "compile.prod",
+        callback);
+});
+
+gulp.task("compile", function(callback){
+    runSequence(
+        "compile-ts",
+        "unbundle",
+        "copy-config",
         "copy-html-js",
         callback);
 });
-
-gulp.task("build.prod", ["copy-jspm", "copy-config"], function(callback){
+gulp.task("compile.prod", function(callback){
     runSequence(
-        "compile",
+        "compile-ts",
         "bundle",
+        "copy-config",
         "copy-html-js",
         callback);
 });
 
-// gulp.task("bundle", function () {
-//     run('jspm bundle ./src/app.js ./src/app.bundle.js --inject --minify').exec();
-// });
 
 gulp.task("bundle",function (cb) {
     exec('jspm bundle ./src/app.js ./src/app.bundle.js --inject --minify', function (err, stdout, stderr) {
-        // console.log(err);
-        // console.log(stdout);
-        // console.log(stderr);
         cb(err);
     });
 })
 
-gulp.task("compile", function () {
+gulp.task("unbundle", ['clean-bundle-result'],function (cb) {
+    exec('jspm unbundle', function (err, stdout, stderr) {
+        cb(err);
+    });
+});
+
+gulp.task("clean-bundle-result",function (cb) {
+    return gulp.src('./src/app.bundle.*', {read: false})
+        .pipe(clean());
+});
+
+gulp.task("compile-ts", function () {
     return tsProject.src()
         .pipe(ts(tsProject))
         .js
         .pipe(gulp.dest("src"));
 });
 
-gulp.task("clean", function () {
+gulp.task("clean", ['unbundle'],function () {
     return gulp.src(output_dir.base, {read: false})
         .pipe(clean());
 })
@@ -107,16 +120,30 @@ gulp.task('deploy', ["build"], function () {
     })
 })
 
-gulp.task('watch', function () {
-    var watcher = gulp.watch(['src/**/*.ts','src/**/*.html'], ['compile']);
-    watcher.on('change', function (event) {
-        console.log('File ' + event.path + ' was ' + event.type + ', running tasks...');
-    });
-});
-
 gulp.task('test', function (done) {
     new Server({
         configFile: __dirname + '/karma.conf.js',
         singleRun: true
     }, done).start();
+});
+
+gulp.task('serve', ['build'], function() {
+    var server = gls.static('app', 8888);
+    server.start();
+
+
+    gulp.watch(['src/**/*.ts','src/**/*.html'], ['compile'], function (file) {
+        server.notify.apply(server, [file]);
+    });
+
+});
+
+gulp.task('serve.prod', ['build.prod'], function() {
+    var server = gls.static('app', 8888);
+    server.start();
+
+
+    gulp.watch(['src/**/*.ts','src/**/*.html'], ['compile.prod'], function (file) {
+        server.notify.apply(server, [file]);
+    });
 });

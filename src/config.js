@@ -13,19 +13,6 @@ System.config({
     "github:*": "jspm_packages/github/*",
     "npm:*": "jspm_packages/npm/*"
   },
-  bundles: {
-    "app.bundle.js": [
-      "app.js",
-      "npm:jquery@2.2.4.js",
-      "npm:jquery@2.2.4/dist/jquery.js",
-      "domain/event.js",
-      "npm:babel-runtime@5.8.38/helpers/class-call-check.js",
-      "npm:babel-runtime@5.8.38/helpers/create-class.js",
-      "npm:babel-runtime@5.8.38/core-js/object/define-property.js",
-      "npm:core-js@1.2.6/library/fn/object/define-property.js",
-      "npm:core-js@1.2.6/library/modules/$.js"
-    ]
-  },
 
   map: {
     "Ev": "../app/domain/event",

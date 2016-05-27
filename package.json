@@ -25,6 +25,7 @@
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
     "gulp-karma": "0.0.5",
+    "gulp-live-server": "0.0.29",
     "gulp-sourcemaps": "^1.6.0",
     "gulp-surge": "^0.1.0",
     "gulp-typescript": "^2.13.4",

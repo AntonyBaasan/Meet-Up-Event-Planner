@@ -15,7 +15,7 @@ class MainPage {
     }
 
     render(id:string, templateName:string){
-        console.log("aaaaas");
+        console.log("aaaaasssss");
         $(id).load(templateName);
     }
 }
