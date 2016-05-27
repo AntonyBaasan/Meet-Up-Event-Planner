@@ -2,7 +2,7 @@
  * Created by Antony on 2016-05-22.
  */
 
-import {EventForm} from "./comp/event-form"
+import {EventForm} from "components/event-form"
 import Event from "./domain/event"
 import {_} from "underscore"
 import $ from 'jquery';

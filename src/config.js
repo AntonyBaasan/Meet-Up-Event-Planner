@@ -29,6 +29,7 @@ System.config({
 
   map: {
     "Ev": "../app/domain/event",
+    "User": "../app/domain/user",
     "babel": "npm:babel-core@5.8.38",
     "babel-runtime": "npm:babel-runtime@5.8.38",
     "core-js": "npm:core-js@1.2.6",
