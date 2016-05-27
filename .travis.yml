@@ -8,7 +8,6 @@ before_script:
   - sh -e /etc/init.d/xvfb start
 
   - npm install -g jspm
-  - jspm install
   - npm install -g gulp
   - gulp build.prod
   - npm install karma
