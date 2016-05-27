@@ -3,11 +3,11 @@
 
 node_modules
 bower_components
-jspm_packages
 src/jspm_packages
-#src/app.bundle.js
-#src/app.bundle.js.map
-#src/**/*.js
+src/app.bundle.js
+src/app.bundle.js.map
+src/**/*.js
+!src/config.js
 
 dist
 app
