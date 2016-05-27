@@ -3,6 +3,7 @@ node_js:
   - "6.0"
 
 before_script:
+  - export CHROME_BIN=chromium-browser
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
 
@@ -10,6 +11,7 @@ before_script:
   - jspm install
   - npm install -g gulp
   - gulp build.prod
+  - npm install karma
 
 script: gulp test
 
