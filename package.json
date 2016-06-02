@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "lite-server -c my-bs-config.json",
     "bundle": "jspm bundle ./src/app.js ./src/app.bundle.js --inject --minify",
-    "unbundle": "jspm unbundle && rm ./src/app.bundle.js && rm ./src/app.bundle.js.map"
+    "unbundle": "jspm unbundle && rm ./src/app.bundle.js && rm ./src/app.bundle.js.map",
+    "start": "npm run dev"
   },
   "repository": {
     "type": "git",
